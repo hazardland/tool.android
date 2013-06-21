@@ -8,19 +8,72 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class Http
 {
-    HttpURLConnection client;
+    URLConnection client;
     public Error error;
     
     public Http ()
     {
+		SSLContext context = null;
+		try
+		{
+			context = SSLContext.getInstance("TLS");
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			context.init(null, new TrustManager[] { new X509TrustManager()
+			{
+				public void checkClientTrusted(X509Certificate[] chain, String authType)
+				{
+				}
 
+				public void checkServerTrusted(X509Certificate[] chain, String authType)
+				{
+				}
+
+				public X509Certificate[] getAcceptedIssuers()
+				{
+					return new X509Certificate[] {};
+				}
+			} }, null);
+		}
+		catch (KeyManagementException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+
+		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier()
+		{
+			public boolean verify(String hostname, SSLSession session)
+			{
+				return true;
+			}
+		});
     }
     
     public boolean connect (String link)
     {
+   	
         boolean result = true;
         URL url = null;
         try
@@ -34,7 +87,8 @@ public class Http
         }
         try
         {
-            client = (HttpURLConnection) url.openConnection();
+            client = url.openConnection();
+            client.setRequestProperty("Accept-Charset", "UTF-8");
         } 
         catch (IOException e)
         {
@@ -62,7 +116,8 @@ public class Http
             catch (IOException e1)
             {
                 finish ();
-                debug ("bad stream");            
+                debug ("bad stream");
+                e1.printStackTrace();
             }
             try
             {
@@ -141,8 +196,8 @@ public class Http
     
     public void finish ()
     {
-        debug ("disconnected");
-        client.disconnect();
+        //debug ("disconnected");
+        //client.disconnect();
     }
     
     public byte[] data (String link)
@@ -205,6 +260,6 @@ public class Http
     
     public void debug (String message)
     {
-        //System.out.println ("http: "+message);
+        System.out.println ("http: "+message);
     }
 }
