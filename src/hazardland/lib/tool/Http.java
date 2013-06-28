@@ -118,6 +118,7 @@ public class Http
                 finish ();
                 debug ("bad stream");
                 e1.printStackTrace();
+                return null;
             }
             try
             {
@@ -125,7 +126,7 @@ public class Http
             }
             catch (NullPointerException e)
             {
-                
+            	debug ("buffered reader error");
             }
             StringBuilder result = new StringBuilder();
             String line;
@@ -133,22 +134,26 @@ public class Http
             {
                 while ((line = reader.readLine())!=null) 
                 {
-                    result.append(line);
+                    result.append(line+"\n");
                 }
             }
             catch (NullPointerException e)
             {
                 debug ("no internet connection");
+                finish();
+                return null;
             }            
             catch (IOException e)
             {
                 debug ("error while readering result");
                 finish ();
+                return null;
             }
             catch (OutOfMemoryError e)
             {
                 debug ("out of memory !");
                 finish ();
+                return null;
             }
             finally
             {
@@ -173,6 +178,7 @@ public class Http
             catch (OutOfMemoryError e)
             {
                 debug ("out of memory !");
+                return null;
             }
             finally
             {
@@ -214,6 +220,7 @@ public class Http
             {
                 finish ();
                 debug ("bad stream");
+                return null;
             }
             byte[] buffer = new byte[1024];
             int read = 0;
@@ -228,14 +235,17 @@ public class Http
             catch (NullPointerException e)
             {
                 debug ("no internet connection");
+                return null;
             }
             catch (IOException e)
             {
                 debug ("error while readering result");
+                return null;
             }
             catch (OutOfMemoryError e)
             {
                 debug ("out of memory !");
+                return null;
             }
             finally
             {

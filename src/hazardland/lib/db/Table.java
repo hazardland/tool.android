@@ -494,13 +494,9 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
             save (target);
         }
 	}
-
 	
-	public boolean save (Target target)
+	public ContentValues read (Target target)
 	{
-		
-		int result = 0;
-
 		ContentValues values = new ContentValues ();
 		
 		java.lang.reflect.Field property = null;
@@ -512,8 +508,8 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
 		debug ("----------------");
 		for (Field field : fields.values()) 
 		{
-			if (!field.primary)
-			{
+//			if (!field.primary)
+//			{
 				try 
 				{
 					property = target.getClass().getField(field.name);
@@ -625,9 +621,46 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
 				    debug (field.name + " ->  "+(String)object);
 					values.put ("\""+field.name+"\"", (String)object);
 				}
-			}
+//			}
 		}
-		debug ("----------------");
+		debug ("----------------");		
+		return values;
+	}
+	
+	public boolean add (Target target)
+	{
+		int result = 0;
+		ContentValues values = read (target);
+		Lock lock = new Lock (database, Lock.SAVE);
+        SQLiteDatabase database = this.database.getWritableDatabase ();		
+		debug ("inserting");
+		result = (int) database.insert (name, null, values);
+        database.close();
+        lock.unlock ();
+		if (result>0)
+		{
+			debug ("inserted "+result);
+			target.id = result;
+			//target = null;
+			//target = load (result);
+			debug ("inserted with id "+target.id);
+			//target.id = result;
+			if (target==null)
+			{
+				debug ("failed to load after insert");
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean save (Target target)
+	{
+		
+		int result = 0;
+
+		ContentValues values = read (target);
+		values.remove ("id");
 
 		Lock lock = new Lock (database, Lock.SAVE);
         SQLiteDatabase database = this.database.getWritableDatabase ();		
@@ -690,6 +723,11 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
         database.close();
         lock.unlock();
         return false;
+    }
+    
+    public void clear ()
+    {
+    	delete (query);
     }
 
     public void delete (Query query)

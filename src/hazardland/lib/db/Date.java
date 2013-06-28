@@ -8,6 +8,16 @@ public class Date extends Value
     public String topic = "";
     public String source = "";
     
+    public Date ()
+    {
+    	
+    }
+    
+    public Date (String value)
+    {
+    	set (value);
+    }
+    
     public void set (String value)
     {
         if (!Text.empty(value) && !Text.empty(value.trim()))
