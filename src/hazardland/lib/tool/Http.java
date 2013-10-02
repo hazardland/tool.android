@@ -283,6 +283,7 @@ public class Http
             {
                 finish ();
                 debug ("bad stream");
+                System.out.println("no internet connection while file download");                
                 return false;
             }
             byte[] buffer = new byte[1024];
