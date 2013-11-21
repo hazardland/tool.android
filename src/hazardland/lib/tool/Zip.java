@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -53,13 +54,7 @@ public class Zip
 			{
 				file = new ZipFile (this.name);
 				debug ("opened file "+this.name);
-//				Enumeration<? extends ZipEntry> entries = file.entries();
-//				while (entries.hasMoreElements())
-//				{
-//					ZipEntry entry = entries.nextElement();
-//					list.put(entry.getName(), entry.getName());
-//					debug (entry.getName());
-//				}
+
 			}
 			catch (IOException e)
 			{
@@ -71,6 +66,32 @@ public class Zip
 			return true;
 		}
 		return false;
+	}
+	public ArrayList<String> list ()
+	{
+		return list (null);
+	}
+	public ArrayList<String> list (String folder)
+	{
+		if (open())
+		{
+			ArrayList<String> list = new ArrayList<String>();
+			Enumeration<? extends ZipEntry> entries = file.entries();
+			while (entries.hasMoreElements())
+			{
+				ZipEntry entry = entries.nextElement();
+				if (folder==null)
+				{
+					list.add (entry.getName());
+				}
+				else if (entry.getName().startsWith(folder))
+				{
+					list.add (entry.getName());
+				}
+			}
+			return list;
+		}
+		return null;
 	}
 	public boolean close ()
 	{
