@@ -48,7 +48,8 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
 
 		this.database = database;
 		this.target = target;
-		this.name = Text.afterLast (".", target.getName()).toLowerCase()+"s";
+		//this.name = Text.afterLast (".", target.getName()).toLowerCase()+"s";
+		this.name = Text.afterLast (".", target.getName()).toLowerCase();
 		debug ("table name is "+name);
 		debug ("------------------------------------");
 		java.lang.reflect.Field[] propertys = target.getFields();
