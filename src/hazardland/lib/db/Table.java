@@ -428,7 +428,8 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
 			    Property.set (property, result, cursor.getString(from+position));
 			}
 		}
-		debug ("----------------");		
+		debug ("----------------");
+		result.create();
 	    return result;		
 	}
 	
@@ -798,7 +799,7 @@ public class Table<Target extends Entity>// extends SQLiteOpenHelper
                 {
                     query = new Query(this);
                 }
-                query.where.query = "\""+name+"\".\""+field.name+"\"="+object;
+                query.where.string = "\""+name+"\".\""+field.name+"\"="+object;
                 if (property!=null)
                 {
                     debug ("object id is "+object);

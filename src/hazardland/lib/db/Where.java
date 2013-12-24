@@ -2,12 +2,12 @@ package hazardland.lib.db;
 
 public class Where
 {
-    public String query;
+    public String string;
     public String toString ()
     {
-        if (query!=null && query!="")
+        if (string!=null && string!="")
         {
-            return " WHERE " + query + " ";
+            return " WHERE " + string + " ";
         }
         return "";
     }

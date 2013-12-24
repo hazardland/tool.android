@@ -80,7 +80,7 @@ public class Server
         if (database.table(Command.class)!=null)
         {
             Query query = new Query (database.table(Command.class));
-            query.where.query = "commands.view=1";            
+            query.where.string = "commands.view=1";            
             ArrayList<Command> result = database.table(Command.class).load(query);
             if (result!=null && result.size()>0)
             {
@@ -162,7 +162,7 @@ public class Server
         if (database.table(Command.class)!=null)
         {
             Query query = new Query (database.table(Command.class));
-            query.where.query = "commands.view=0";
+            query.where.string = "commands.view=0";
             query.limit.count = 1;
             ArrayList<Command> commands = database.table(Command.class).load(query);
             if (commands!=null && commands.size()>0)

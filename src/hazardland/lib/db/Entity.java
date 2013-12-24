@@ -12,6 +12,10 @@ public class Entity
 	{
 	    return id;
 	}
+	public void create ()
+	{
+		
+	}
 	public Entity database (Database database)
 	{
 		this.database = database;
