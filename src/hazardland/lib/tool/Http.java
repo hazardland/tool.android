@@ -107,7 +107,7 @@ public class Http
     {
         if (connect(link))
         {
-            debug ("connected");
+            debug ("connected to "+link);
             BufferedReader reader = null;
             InputStream stream = null;
             try
