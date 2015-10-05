@@ -269,6 +269,11 @@ public class Http
         return null;
     }
     
+    public boolean save (String link, java.io.File file)
+    {
+    	return save (link, file, null); 
+    }
+    
     public boolean save (String link, java.io.File file, Progress progress)
     {
         if (connect(link))
